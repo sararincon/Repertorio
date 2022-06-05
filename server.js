@@ -3,7 +3,12 @@ const path = require("path");
 
 const app = express();
 
-const { getCanciones, crearCancion, deleteCancion } = require("./queries");
+const {
+  getCanciones,
+  crearCancion,
+  deleteCancion,
+  editCancion,
+} = require("./queries");
 
 //Middleware (funciones que se ejecutan antes de que lleguen las rutas) "Entender el body"
 app.use(express.json());
@@ -32,9 +37,22 @@ app.post("/cancion", async (req, res) => {
   }
 });
 
-app.delete("/cancion/:id", async (req, res) => {
+app.put("/cancion/:id", async (req, res) => {
   try {
-    await deleteCancion(req.params.id);
+    const { id } = req.params;
+    const { titulo, artista, tono } = req.body;
+    await editCancion({ id, titulo, artista, tono });
+    // console.log(result);
+    res.status(200).json({ message: "Cancion editada correctamente" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete("/cancion?", async (req, res) => {
+  try {
+    const { id } = req.query;
+    await deleteCancion(+id);
     res.status(200).json({ message: "Cancion eliminada correctamente" });
   } catch (err) {
     res.status(500).json({ error: err.message });
