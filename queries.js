@@ -1,14 +1,13 @@
 const { pool } = require("./db.js"); // Importa la conexión a la base de datos
 
 const getCanciones = async () => {
-  const { rows } = await pool.query("SELECT * FROM canciones  ORDER BY id");
+  const { rows } = await pool.query("SELECT * FROM canciones ORDER BY id");
   return rows;
 };
 
 const crearCancion = async ({ titulo, artista, tono }) => {
   const { rows } = await pool.query({
     text: "INSERT INTO canciones (titulo, artista, tono) VALUES ($1, $2, $3)",
-    // values: [req.body.titulo, req.body.artistas, req.body.tono],
     values: [titulo, artista, tono],
   });
 
@@ -16,7 +15,7 @@ const crearCancion = async ({ titulo, artista, tono }) => {
 };
 
 const editCancion = async ({ id, titulo, artista, tono }) => {
-  console.log(id, titulo, artista, tono);
+  // console.log(id, titulo, artista, tono);
 
   const dbQuery = {
     text: "UPDATE canciones SET titulo = $1, artista = $2, tono = $3 WHERE id = $4 RETURNING *",

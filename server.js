@@ -21,6 +21,7 @@ app.get("/", (req, res) => {
 app.get("/canciones", async (req, res) => {
   try {
     const data = await getCanciones();
+    // console.log(data);
     res.json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -29,7 +30,8 @@ app.get("/canciones", async (req, res) => {
 
 app.post("/cancion", async (req, res) => {
   try {
-    await crearCancion(req.body); //req.body es el objeto que viene en el body de la petición
+    await crearCancion(req.body);
+    //console.log(req.body);
     res.status(201).json({ message: "Cancion creada correctamente" });
   } catch (err) {
     console.log(err);
@@ -41,9 +43,12 @@ app.put("/cancion/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { titulo, artista, tono } = req.body;
-    await editCancion({ id, titulo, artista, tono });
-    // console.log(result);
-    res.status(200).json({ message: "Cancion editada correctamente" });
+    const resp = await editCancion({ id, titulo, artista, tono });
+
+    res.status(200).json({
+      message: "Cancion editada correctamente",
+      resultado: resp.rows,
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
